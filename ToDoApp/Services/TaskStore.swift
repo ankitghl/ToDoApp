@@ -7,15 +7,21 @@
 
 import Foundation
 
-struct DataStore {
+protocol TaskStoreProtocol {
+    func loadTasks() -> [Task]
+    func saveTasks(_ tasks: [Task])
+}
+
+
+class TaskStore: TaskStoreProtocol {
     private let tasksKey = "tasks_key"
         
     func loadTasks() -> [Task] {
         guard let data = UserDefaults.standard.data(forKey: tasksKey),
-        let decoded = try? JSONDecoder().decode([Task].self, from: data) else {
+        let tasks = try? JSONDecoder().decode([Task].self, from: data) else {
             return []
         }
-        return decoded;
+        return tasks;
     }
     
     func saveTasks(_ tasks: [Task]) {

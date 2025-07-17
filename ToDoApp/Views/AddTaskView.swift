@@ -8,11 +8,33 @@
 import SwiftUI
 
 struct AddTaskView: View {
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: HomeViewModel
+    @State private var taskTitle: String = ""
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Form {
+            TextField("Task Title", text: $taskTitle)
+            
+            Section {
+                Button {
+                    viewModel.addTask(title: taskTitle)
+                    dismiss()
+                } label: {
+                    HStack {
+                        Spacer()
+                        Text("Save")
+                        Spacer()
+                    }
+                }
+                .disabled(taskTitle.isEmpty)
+            }
+        }
+        
     }
 }
 
 #Preview {
-    AddTaskView()
+    @Previewable @StateObject var viewModel: HomeViewModel = HomeViewModel()
+    AddTaskView(viewModel: viewModel)
 }
